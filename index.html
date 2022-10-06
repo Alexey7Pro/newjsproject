@@ -3,14 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Theory</title>
-
+    <title>eShop</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
 </head>
 
 <body>
-    <h1>Theory</h1>
-    <h2>lesson 4</h2>
-    <script src="index.js"></script>
+    <div id="root">
+        <header class="menu">
+            <h1 class="title">eShop</h1>
+            <div class="search">
+                <input type="text" class="goods-search" v-model="search" />
+
+            </div>
+            <div class="actions">
+                <button class="cart-button" type="button">Корзина</button>
+            </div>
+        </header>
+        <main>
+            <div class="goods-List">
+                <div class="goods-item" v-for="item in filteredGoods">
+                    <h3>{{item.product_name}}</h3>
+                    <p>{{item.price}}</p>
+                </div>
+            </div>
+            <div>
+                {{calculatePrice}}
+            </div>
+            <div>
+                {{search}}
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
 </body>
 
 </html>

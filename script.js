@@ -5,61 +5,45 @@ const goods = [
   { title: 'Shoes', price: 250 },
 ];
 
-const GET_GOODS_ITEMS = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json'
-const GET_BASKET_GOODS_ITEMS = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/getBasket.json'
+const BASE_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/';
+const GET_GOODS_ITEMS = `${BASE_URL}
+catalogData.json`
+const GET_BASKET_GOODS_ITEMS = `${BASE_URL}
+getBasket.json`;
 
-function service(url) {
-  return new Promise((resolve => {
-    xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.send();
-    xhr.onload = () => {
-      resolve(JSON.parse(xhr.response))
+function service(url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.send();
+  xhr.onload = () => {
+    if (xhr.readyState === 4) {
+      callback(JSON.parse(xhr.response))
     }
-  }))
-}
-
-
-class GoodsItem {
-  constructor({ product_name, price }) {
-    this.product_name = product_name;
-    this.price = price;
-  }
-  render() {
-    return `
-  <div class="goods-item">
-  <h3>${this.product_name}</h3>
-  <p>${this.price}</p>
-  </div>
-      `;
   }
 }
-class GoodsList {
-  items = [];
-  fetchGoods(callback) {
-    return service(GET_GOODS_ITEMS).then((data) => {
-      this.items = data;
-      return
+
+const app = new Vue({
+  el: '#root',
+  data: {
+    goods: [],
+    search: ''
+  },
+  mounted() {
+    service(GET_GOODS_ITEMS, (data) => {
+      this.goods = data;
     });
-
+  },
+  computed: {
+    calculatePrice() {
+      return this.goods.reduce((prev, { price }) => {
+        return prev + price;
+      }, 0)
+    },
+    filteredGoods() {
+      return this.goods.filter((item) => {
+        const regExp = new RegExp(this.search);
+        return regExp.test(item.product_name)
+      })
+    }
   }
-
-  calculatePrice() {
-    return this.items.reduce((prev, { price }) => {
-      return prev + price;
-    }, 0)
-  }
-  render() {
-    const goods = this.items.map(item => {
-      const goodItem = new GoodsItem(item);
-      return goodItem.render()
-    }).join('');
-
-    document.querySelector('.goods-List').innerHTML = goods;
-  }
-}
-const goodsList = new GoodsList();
-goodsList.fetchGoods().then(() => {
-  goodsList.render();
 })
-
