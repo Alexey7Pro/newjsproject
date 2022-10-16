@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>eShop</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <header class="menu">
+            <h1 class="title">eShop</h1>
+            <div class="search">
+
+
+                <!--<form action="#" class="search-form" @submit.prevent='$parent.filter'>
+                    <input type="text" class="goods-search" v-model='$parent.userSearch'>
+                    </form>-->
+                <input type="text" class="goods-search" v-model="search" @input="filterItems" />
+                <custom_button @click="filterItems">Искать</custom_button>
+
+            </div>
+            <div class="actions">
+
+                <custom_button @click="setVisibleCard">Корзина</custom_button>
+
+            </div>
+        </header>
+        <main>
+            <div class="goods-List">
+                <goods_item v-for="item in filteredItems" :item="item"></goods_item>
+
+            </div>
+            <div v-if="!filteredItems.length">нет данных</div>
+        </main>
+
+        <basket @close="setVisibleCard" v-if="isVisibleCart"></basket>
+        <div>
+            {{calculatePrice}}
+        </div>
+        <div>
+            {{search}}
+        </div>
+
+    </div>
+
+</body>
+
+</html>
