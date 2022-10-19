@@ -11,42 +11,25 @@
 
 <body>
     <div id="root">
-        <header class="menu">
-            <h1 class="title">eShop</h1>
+        <header>
+            <h1 class="title">eShop - {{search}}</h1>
             <div class="search">
-
-
-                <!--<form action="#" class="search-form" @submit.prevent='$parent.filter'>
-                    <input type="text" class="goods-search" v-model='$parent.userSearch'>
-                    </form>-->
-                <input type="text" class="goods-search" v-model="search" @input="filterItems" />
-                <custom_button @click="filterItems">Искать</custom_button>
-
+                <search-component v-model="search"></search-component>
             </div>
             <div class="actions">
-
-                <custom_button @click="setVisibleCard">Корзина</custom_button>
-
+                <custom-button v-on:click="setVisionCard">Корзина</custom-button>
             </div>
         </header>
         <main>
-            <div class="goods-List">
-                <goods_item v-for="item in filteredItems" :item="item"></goods_item>
-
+            <div class="goods-list">
+                <goods-item v-for="item in filteredItems" v-bind:item="item"></goods-item>
             </div>
-            <div v-if="!filteredItems.length">нет данных</div>
         </main>
+        <basket-goods v-if="cardIsVision" v-on:closeclick="setVisionCard"></basket-goods>
 
-        <basket @close="setVisibleCard" v-if="isVisibleCart"></basket>
-        <div>
-            {{calculatePrice}}
-        </div>
-        <div>
-            {{search}}
-        </div>
 
+        <!--      <div>{{ calculatePrice }}</div>-->
     </div>
-
 </body>
 
 </html>
